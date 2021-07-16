@@ -1,0 +1,34 @@
+{
+  "name": "webhooks-microservice",
+  "version": "1.0.0",
+  "description": "Webhooks microservice using  Moleculer and a backend using Express",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "babel-node ./src/index.js --development --trace-warnings"
+  },
+  "keywords": [
+    "webhooks",
+    "moleculer",
+    "express",
+    "mongoose"
+  ],
+  "repository": "https://github.com/DiabolusGX/webhooks-microservice.git",
+  "author": "Ankit Malik",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "client-sessions": "^0.8.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "moleculer": "^0.14.15",
+    "mongoose": "^5.13.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^6.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
+  }
+}
