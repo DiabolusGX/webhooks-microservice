@@ -44,20 +44,6 @@ export const listWebhooks = async (req, res) => {
     }
 }
 
-// trigger webhook
-export const triggerWebhook = async (req, res) => {
-    try {
-        const ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() ||
-            req.socket.remoteAddress;
-        await broker.call('webhooks.trigger', { ipAddress: ip });
-        return res.status(200).json({
-            message: 'Webhook triggered successfully'
-        });
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
-    }
-};
-
 // delete webhook
 export const deleteWebhook = async (req, res) => {
     try {

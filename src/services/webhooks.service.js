@@ -6,6 +6,7 @@ import axios from 'axios';
 const broker = new ServiceBroker({
     nodeID: "node-1",
     requestTimeout: 5000,
+    namespace: "webhooks",
     // enable retries on failed requests
     retryPolicy: {
         enabled: true, // enable retries
@@ -37,13 +38,13 @@ const svc = broker.createService({
 
         // Add a new webhook
         register(ctx) {
-            return new Webhook({ targetUrl: ctx.targetUrl }).save();
+            return new Webhook({ targetUrl: ctx.params.targetUrl }).save();
         },
 
         // Update a webhook
         update(ctx) {
             return Webhook.findByIdAndUpdate(
-                ctx.id, { targetUrl: ctx.targetUrl }, { new: true }
+                ctx.id, { targetUrl: ctx.params.targetUrl }, { new: true }
             );
         },
 
@@ -56,28 +57,36 @@ const svc = broker.createService({
         async trigger(ctx) {
             const webhooks = await Webhook.find().select({ 'targetUrl': 1, '_id': 0 });
 
-            webhooks.forEach(webhook =>
-                // retry requsets 5 times
-                axios.post(webhook.targetUrl, {
-                    ip: ctx.ipAddress || 'no IP found',
-                    UNIX_Timestamp: Math.floor(Date.now() / 1000)
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    retry: {
-                        retries: 5,
-                        delay: 100,
-                        maxDelay: 2000,
-                        factor: 2,
-                        check: err => err && !!err.retryable
-                    }
-                }).then((res) => {
-                    console.log("sent", res);
-                }).catch(err => {
-                    this.logger.warn(`Webhook failed: ${webhook.targetUrl}`, err);
-                })
-            );
+            // make batches of post requests
+            const batches = [];
+            for (let i = 0; i < webhooks.length; i += 10) {
+                // add 10 requests to the batch
+                const requests = [];
+                for (let j = i; j < i + 10 && j < webhooks.length; j++) {
+                    requests.push(
+                        axios.post(webhooks[j].targetUrl, {
+                            ip: ctx.params.ipAddress || 'no IP found',
+                            UNIX_Timestamp: Math.floor(Date.now() / 1000)
+                        }, {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            // retry 5 times with a 100ms delay between retries
+                            retry: {
+                                retries: 5,
+                                delay: 100,
+                                maxDelay: 2000,
+                                factor: 2, // multiplier for delay
+                                check: err => err && !!err.retryable
+                            }
+                        })
+                    );
+                }
+                // add the batch to the batches array
+                batches.push(Promise.all(requests));
+            }
+            // return all the requests in batches
+            return Promise.all(batches);
         }
     }
 });

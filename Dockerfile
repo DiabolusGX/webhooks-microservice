@@ -11,4 +11,4 @@ RUN npm install --production
 
 COPY . .
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
