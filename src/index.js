@@ -10,6 +10,10 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import sessions from 'client-sessions';
 import User from './database/Models/User.js';
+import broker from './services/webhooks.service.js';
+
+// start broker service
+broker.start();
 
 // create app
 const app = express();

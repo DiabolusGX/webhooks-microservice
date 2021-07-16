@@ -17,6 +17,7 @@
   "author": "Ankit Malik",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "client-sessions": "^0.8.0",
     "dotenv": "^10.0.0",

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const { model, Schema } = mongoose;
 
 const Webhook = new Schema({
-    url: {
+    targetUrl: {
         type: String,
         required: true
     },
