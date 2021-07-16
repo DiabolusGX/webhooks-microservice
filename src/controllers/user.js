@@ -28,7 +28,7 @@ export const login = async (req, res) => {
     const { username, password } = req.body;
     const dbUser = await User.findOne({ username });
     if (!dbUser) {
-        return res.status(401).json({
+        return res.status(404).json({
             message: 'User not found'
         });
     }
