@@ -66,7 +66,7 @@ const svc = broker.createService({
                     requests.push(
                         axios.post(webhooks[j].targetUrl, {
                             ip: ctx.params.ipAddress || 'no IP found',
-                            UNIX_Timestamp: Math.floor(Date.now() / 1000)
+                            UNIX_TIMESTAMP: Math.floor(Date.now() / 1000)
                         }, {
                             headers: {
                                 'Content-Type': 'application/json'

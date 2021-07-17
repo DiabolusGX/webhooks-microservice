@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "babel-node ./src/index.js --development --trace-warnings"
+    "start": "babel-node ./src/index.js --development --trace-warnings",
+    "serve": "yarn install && babel-node ./src/index.js --trace-warnings"
   },
   "keywords": [
     "webhooks",

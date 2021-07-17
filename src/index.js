@@ -24,7 +24,7 @@ app.use(urlencoded({ extended: false }));
 // configure session
 app.use(sessions({
     cookieName: 'session',
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'my-big-and-safe-secret',
     duration: 2 * 30 * 60 * 1000, // valid session for 1 hour
     activeDuration: 10 * 60 * 1000, // active session for 10 minutes
     active: true, // enable session
